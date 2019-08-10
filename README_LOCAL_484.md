@@ -1,6 +1,4 @@
 <<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 # Warung Santuy
 Toko Online With Cakephp
 =======
@@ -56,9 +54,3 @@ The app skeleton uses a subset of [Foundation](http://foundation.zurb.com/) (v5)
 framework by default. You can, however, replace it with any other library or
 custom styles.
 >>>>>>> first commit
-=======
-# rogerskuy
->>>>>>> 542b3b61c0866256a39f6859e36cbe5f1fde8103
-=======
-# rogerskuy
->>>>>>> 542b3b61c0866256a39f6859e36cbe5f1fde8103
