@@ -1,0 +1,24 @@
+Cara masukin Database: 
+
+- buka folder config
+- buka app.php
+- cari Datasources
+- pilih yg default lalu edit yang username,password,dan database nya saja
+- 'default' => [
+            'className' => Connection::class,
+            'driver' => Mysql::class,
+            'persistent' => false,
+            'host' => 'localhost',
+            'username' => 'root', => USERNAME
+            'password' => '',	=> PASSWORD
+            'database' => 'pos_app', => NAMA DB
+            //'encoding' => 'utf8mb4',
+            'timezone' => 'UTC',
+            'flags' => [],
+            'cacheMetadata' => true,
+            'log' => false,
+            'quoteIdentifiers' => false,
+            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+
+            'url' => env('DATABASE_URL', null),
+        ],
