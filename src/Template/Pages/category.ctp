@@ -1,5 +1,5 @@
 <div class="uk-container">
-	<div class="text-title" style="padding-top: 30px;">
+	<div class="text-title" style="padding-top: 0px;">
 		<nav class="uk-navbar-container" uk-navbar style="background: none;">
 		    <div class="uk-navbar-right">
 
@@ -22,18 +22,25 @@
 		            	</a>
 		            	<?php endif; ?>
 		        	</li>
-		            <li>
-		            	
+		            <li>	
 		            	<a href="#modal-center" uk-toggle>
 			            	<span uk-icon="user" ></span>   		
 			            </a>
 		        	</li>
+		        	<?php if(@$user->id == null): ?>
 		            
+		        	<?php else: ?>
+		        		<li>	
+			            	<a href="#saldo-modal" uk-toggle>
+				            	<span uk-icon="plus-circle"></span>   		
+				            </a>
+			        	</li>
+		        	<?php endif; ?>
 		        </ul>
 
 		    </div>
 		</nav>
-		<h1 class="uk-text-center uk-heading-large">WARUNG SANTUY</h1>
+		<p class="uk-text-center uk-heading-large" style="margin-top: 0px; margin-bottom: 0px; padding-bottom: 50px;">WARUNG SANTUY</>
 	</div>
 
 	<div id="modal-center" class="uk-flex-top" uk-modal>
@@ -48,21 +55,43 @@
                 'controller' => 'Customers',
                 'action' => 'login',
                 'prefix' => false
-            ]) ?>" class="uk-text-uppercase uk-button uk-button-default">Login</a>
+            ]) ?>" class="uk-text-uppercase uk-button uk-button-primary">Sign In</a>
+
+            	<hr>
+
+            	<h1>Anda Belum Daftar ?</h1>
+
+            	<a href="<?= $this->Url->build([
+                'controller' => 'Customers',
+                'action' => 'register',
+                'prefix' => false
+            ]) ?>" class="uk-text-uppercase uk-button uk-button-danger">Register</a>
+
+            	<hr>
+
 	        </div>
 	        <?php else: ?>
 	        <div>
-	        	<h3>
-	        	Id : <?= @$user->id ?>
+		       	<h3>
+		       		Nama : <?= @$member->nama_depan.' '.@$member->nama_belakang ?>		
+		       	</h3>
+		       	<h3>
+		       		Email : <?= @$member->email ?>
+		       	</h3>
+		       	<h3>
+	        		Alamat : <?= @$member->address ?>
 		        </h3>
 		       	<h3>
-		       		Username : <?= @$user->username ?>		
+		       		Saldo : Rp <?= number_format(@$member->saldo) ?>
 		       	</h3>
 		       	<a href="<?= $this->Url->build([
-                'controller' => 'Customers',
-                'action' => 'logout',
-                'prefix' => false
-            ]) ?>" class="uk-text-uppercase uk-button uk-button-default">Logout</a>
+                		'controller' => 'Customers',
+                		'action' => 'logout',
+                		'prefix' => false
+            		]) ?>"
+            		class="uk-text-uppercase uk-button uk-button-default" onclick="return confirm('Apa Anda Yakin Ingin Keluar ? , Jika Anda Keluar Keranjang Anda Akan Terhapus')" id="logout-id">
+        			Logout
+        		</a>
 	        </div>
             <?php endif; ?>
 
@@ -75,6 +104,22 @@
 	        <button class="uk-modal-close-default" type="button" uk-close></button>
 
 	       	<h1>Keranjang Anda Masih Kosong, Silahkan Order</h1>
+
+	    </div>
+	</div>
+
+	<div id="saldo-modal" class="uk-flex-top" uk-modal>
+	    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+
+	        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+	       	<h1>Anda Ingin Mengisi Saldo Anda ?</h1>
+
+	       	<a href="<?= $this->Url->build([
+                'controller' => 'Pages',
+                'action' => 'addSaldo',@$member->id,
+                'prefix' => false
+            ]) ?>" class="uk-text-uppercase uk-button uk-button-danger">Tambah Saldo</a>
 
 	    </div>
 	</div>
@@ -115,6 +160,10 @@
 
 <script type="text/javascript">
 	$( document ).ready(function() {
+
+		function confirm_logout() {
+		  return confirm('Apa Anda Yakin Ingin Keluar ? , Jika Anda Keluar Keranjang Anda Akan Terhapus.');
+		}
 
 		var url = window.location.href;
     

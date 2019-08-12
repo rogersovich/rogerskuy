@@ -36,6 +36,11 @@
 				            </a>
 			        	</li>
 		        	<?php endif; ?>
+		        	<li>	
+		            	<a href="#search-modal" uk-toggle>
+			            	<span uk-icon="search"></span>   		
+			            </a>
+		        	</li>
 		        </ul>
 
 		    </div>
@@ -98,6 +103,26 @@
 	    </div>
 	</div>
 
+	<div id="search-modal" class="uk-flex-top" uk-modal>
+	    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+
+	        <button class="uk-modal-close-default" id="close-search-btn" type="button" uk-close></button>
+
+	        <?= $this->Form->create(null) ?>
+	       	 <div class="uk-margin" >
+	       	 	<div class="uk-width-1-1">
+		       	 	<div class="uk-inline">
+			            <a class="uk-form-icon uk-form-icon-flip" id="secondary-search" uk-icon="icon: search"></a>
+			            <input class="uk-input uk-form-large" name="text_search" type="text" placeholder="Search Product" style="width: 600px; border: none;">
+			        </div>
+			    </div>
+			    <button class="uk-button uk-button-danger uk-width-1-1">search</button>
+	        </div>
+		    <?= $this->Form->end() ?>
+
+	    </div>
+	</div>
+
 	<div id="cart-modal" class="uk-flex-top" uk-modal>
 	    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
 
@@ -126,7 +151,9 @@
 	
 	<?= $this->element('navbar'); ?>
 
-	<div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+	<?php if(empty($sr)): ?>
+
+	<div class="uk-position-relative uk-visible-toggle uk-light" id="card-img" tabindex="-1" uk-slideshow>
 
 	    <ul class="uk-slideshow-items">
 	        <li>
@@ -145,7 +172,26 @@
 
 	</div>
 
-	<h1 class="uk-heading-line uk-text-center" style="padding-bottom: 50px;"><span>New Arrival</span></h1>
+	<?php else: ?>
+	<p class="uk-text-center uk-heading-large">Search Result: "<?= $sr ?>"</p>
+	<br><br>
+	<?php endif; ?>
+
+	<?php if(empty($message)): ?>
+	<h1 class="uk-heading-line uk-text-center" style="padding-bottom: 50px;"><span>Our Product</span></h1>
+	<?php else: ?>
+	<div class="uk-margin uk-text-center">
+		
+		<h2 class="uk-text-uppercase uk-text-emphasis">
+			<span uk-icon="icon: warning; ratio: 2;"></span>
+			<span style="margin-left: 10px;"><?= $message ?></span>
+		</h2>
+		
+	</div>
+	
+	<?php endif; ?>
+
+	
 
 	<div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
 		<?php foreach($productCategory as $product): ?>
@@ -186,6 +232,10 @@
 		function confirm_logout() {
 		  return confirm('Apa Anda Yakin Ingin Keluar ? , Jika Anda Keluar Keranjang Anda Akan Terhapus.');
 		}
+
+		$('#secondary-search').on('click', function(){
+			$('#close-search-btn' ).trigger('click');
+		})
 
 		// $('#logout-id').on('click', function(){
 		// 	var cek = confirm('Apa Anda Yakin Ingin Keluar ? , Jika Anda Keluar Keranjang Anda Akan Terhapus.')

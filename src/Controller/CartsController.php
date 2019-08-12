@@ -14,6 +14,22 @@ class CartsController extends AppController
     public function index()
     {   
         $this->loadModel('Products');
+        $this->loadModel('Customers');
+
+        if($this->Auth->user('id') == null){
+            $member = [];
+        }else{
+            $id = $this->Auth->user('id');
+                
+            $user = $this->Users->get($id);
+            
+            $member = $this->Customers->find('all')
+                ->contain(['Users'])
+                ->where([
+                    'user_id' => $user->id
+                ])
+                ->first();
+        }
 
         $products = $this->Products->find('all');
 
@@ -69,7 +85,7 @@ class CartsController extends AppController
         //dd($total);
 
 
-        $this->set(compact('carts','res','totals','products'));
+        $this->set(compact('carts','res','totals','products','member'));
     }
 
 

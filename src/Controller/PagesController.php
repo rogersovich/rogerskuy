@@ -17,7 +17,12 @@ class PagesController extends AppController
      public function initialize()
     {
        parent::initialize();
-       $this->Auth->allow('index');
+       $this->Auth->allow([
+            'index',
+            'category',
+            'about',
+            'shop'
+       ]);
     }
 
     public function display(...$path)
@@ -57,9 +62,40 @@ class PagesController extends AppController
         $this->loadModel('Customers');
 
         $products = $this->Products->find('all');
-        $productCategory = $this->Products->find('all', [
-            'contain' => ['Categories']
-        ]);
+
+        $message = [];
+
+        if ($this->request->is('post')) {
+            
+            $data = $this->request->getData();
+
+            $productCategory = $this->Products->find('all')
+                ->contain(['Categories'])
+                ->where([
+                    'name LIKE' => '%'.$data['text_search'].'%'
+                ]);
+
+            $sr = [];
+            foreach ($productCategory as $pc) {
+                $sr[]  = $pc;
+            }
+
+            if($sr == null){
+                $message = "No products were found matching your selection.";
+            }
+
+
+            $sr = $data['text_search'];
+
+        }else{
+
+            $productCategory = $this->Products->find('all', [
+                'contain' => ['Categories']
+            ]);
+
+            $sr = null;
+
+        }
 
         $cartTot = $this->Carts->find('all')
             ->select(['qty']);
@@ -83,13 +119,11 @@ class PagesController extends AppController
                     'user_id' => $user->id
                 ])
                 ->first();
-
-            //dd($member);
         }
 
         //dd($productCategory->all());
 
-        $this->set(compact('products','productCategory','res','member'));
+        $this->set(compact('products','productCategory','res','member','message','sr'));
     }
 
     public function addSaldo($id = null){
@@ -123,6 +157,24 @@ class PagesController extends AppController
         $this->loadModel('Categories');
         $this->loadModel('Products');
         $this->loadModel('Carts');
+        $this->loadModel('Customers');
+
+        if($this->Auth->user('id') == null){
+            $member = [];
+        }else{
+            $id = $this->Auth->user('id');
+                
+            $user = $this->Users->get($id);
+            
+            $member = $this->Customers->find('all')
+                ->contain(['Users'])
+                ->where([
+                    'user_id' => $user->id
+                ])
+                ->first();
+        }
+
+        //dd($member);
 
         $carts = $this->Carts->find('all')
             ->select(['qty']);
@@ -149,7 +201,7 @@ class PagesController extends AppController
 
         //dd($productCategory->all());
 
-        $this->set(compact('productCategory','res'));
+        $this->set(compact('productCategory','res','member'));
 
         //dd($productCategory->all());
     }
@@ -159,6 +211,22 @@ class PagesController extends AppController
         $this->loadModel('Categories');
         $this->loadModel('Products');
         $this->loadModel('Carts');
+        $this->loadModel('Customers');
+
+        if($this->Auth->user('id') == null){
+            $member = [];
+        }else{
+            $id = $this->Auth->user('id');
+                
+            $user = $this->Users->get($id);
+            
+            $member = $this->Customers->find('all')
+                ->contain(['Users'])
+                ->where([
+                    'user_id' => $user->id
+                ])
+                ->first();
+        }
 
         $carts = $this->Carts->find('all')
             ->select(['qty']);
@@ -219,12 +287,41 @@ class PagesController extends AppController
 
         //dd($rc);
 
-        $this->set(compact('productCategory','products','res','rc'));
+        $this->set(compact('productCategory','products','res','rc','member'));
 
     }
 
     public function about(){
 
+        $this->loadModel('Carts');
+        $this->loadModel('Customers');
+
+        if($this->Auth->user('id') == null){
+            $member = [];
+        }else{
+            $id = $this->Auth->user('id');
+                
+            $user = $this->Users->get($id);
+            
+            $member = $this->Customers->find('all')
+                ->contain(['Users'])
+                ->where([
+                    'user_id' => $user->id
+                ])
+                ->first();
+        }
+
+        $carts = $this->Carts->find('all')
+            ->select(['qty']);
+
+        $res = [];
+
+        foreach($carts as $c){
+            $res[] = $c->qty;
+        }
+
+
+        $this->set(compact('member','res'));
     }
 
     public function report(){
